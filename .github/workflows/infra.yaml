@@ -2,21 +2,24 @@ name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 jobs:
-  Terraform-Init:
+  Terraform:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
       - shell: pwsh
         name: Generate tf vars
+        env:
+          DO_TOKEN: ${{ secrets.do_token }}
+          DO_REGION: ${{ vars.do_region }}
         run: |
-          ls .
-
+          write-host "region: $env:DO_REGION"
+          
           @"
           do_token = "do_token"
           do_region = "do_region"
           "@ > .infra/env.variables.tfvars
-          cat .infra/env.variables.tfvars
+
 
   # Explore-GitHub-Actions:
   #   runs-on: ubuntu-latest
