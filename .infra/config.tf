@@ -23,7 +23,7 @@ terraform {
     }
 
     key                         = "terraform.tfstate"
-    bucket                      = "ctg-tfstate"
+    # bucket                      = "ctg-tfstate"
 
     # Deactivate a few AWS-specific checks
     skip_credentials_validation = true
