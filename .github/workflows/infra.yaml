@@ -2,14 +2,14 @@ name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 jobs:
+  Init:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
   Terraform-Init:
     runs-on: ubuntu-latest
     steps:
-      - shell: pwsh
-        run: |
-          write-host $pwd
-      - shell: pwsh
-        run: ls .
       - shell: pwsh
         name: Generate tf vars
         run: |
