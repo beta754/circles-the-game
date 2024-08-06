@@ -5,6 +5,10 @@ jobs:
   Terraform:
     runs-on: ubuntu-latest
     environment: primary
+    env:
+      DIGITALOCEAN_TOKEN: ${{ secrets.DO_TOKEN }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.TFBE_ACESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.TFBE_ACCESS_KEY_SECRET }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -12,10 +16,6 @@ jobs:
         name: Generate tf vars
         env:
           DO_REGION: ${{ vars.DO_REGION }}
-
-          DIGITALOCEAN_TOKEN: ${{ secrets.DO_TOKEN }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.TFBE_ACESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.TFBE_ACCESS_KEY_SECRET }}
         run: |
           write-host "Generating tfvars:"
           @"
