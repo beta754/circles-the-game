@@ -10,8 +10,8 @@ jobs:
       - shell: pwsh
         name: Generate tf vars
         env:
-          DO_TOKEN: ${{ secrets.do_token }}
-          # DO_REGION: ${{ $DO_REGION }}
+          DO_TOKEN: ${{ secrets.DO_TOKEN }}
+          DO_REGION: ${{ $vars.DO_REGION }}
         run: |
           write-host "region: $env:DO_REGION"
           
