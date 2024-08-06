@@ -1,5 +1,5 @@
 variable "do_token" {}
 variable "do_region" {
-  default = "nyc1"
+  default = "nyc3"
   type = string
 }
