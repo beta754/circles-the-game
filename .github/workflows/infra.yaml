@@ -9,8 +9,13 @@ jobs:
         run: write-host "Hello from terraform init"
       - shell: pwsh
         run: |
-          write-host "line 1"
-          write-host "line 2"
+          $vars = @"
+          do_token = "do_token"
+          do_region = "do_region"
+          "@
+
+          $vars | out-file -filepath .infra/env.variables.tfvars
+          cat .infra/env.variables.tfvars
 
   # Explore-GitHub-Actions:
   #   runs-on: ubuntu-latest
