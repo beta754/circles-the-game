@@ -12,8 +12,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-      - shell: pwsh
-        name: Generate tf vars
+      - name: Generate tf vars\
+        shell: pwsh
         working-directory: ".infra"
         env:
           DO_REGION: ${{ vars.DO_REGION }}
@@ -22,12 +22,15 @@ jobs:
           @"
           do_region = "do_region"
           "@ > env.variables.tfvars
+          
           cat env.variables.tfvars
-      - shell: pwsh
-        name: init
+      - name: init
+        shell: pwsh
+        working-directory: ".infra"
         run: terraform init
-      - shell: pwsh
-        name: plan
+      - name: plan
+        shell: pwsh
+        working-directory: ".infra"
         run: terraform plan
 
 
