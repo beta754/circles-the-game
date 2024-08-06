@@ -4,11 +4,6 @@ terraform {
       source  = "digitalocean/digitalocean"
       version = "~> 2.0"
     }
-
-    gitlab = {
-      source  = "gitlabhq/gitlab"
-      version = ">=15.10.0"
-    }
   }
 }
 

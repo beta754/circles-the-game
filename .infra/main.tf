@@ -1,20 +1,3 @@
-# Git-Ops
-# resource "tls_private_key" "flux" {
-#   algorithm   = "ECDSA"
-#   ecdsa_curve = "P256"
-# }
-
-# data "gitlab_project" "primary" {
-#   path_with_namespace = "Augury-finance/flux-poc"
-# }
-
-# resource "gitlab_deploy_key" "primary" {
-#   project  = data.gitlab_project.primary.id
-#   title    = "Flux"
-#   key      = tls_private_key.flux.public_key_openssh
-#   can_push = true
-# }
-
 # Infrastructure
 resource "digitalocean_container_registry" "registry" {
   name                   = "circles-the-game"
@@ -24,13 +7,6 @@ resource "digitalocean_container_registry" "registry" {
 data "digitalocean_project" "ctg" {
   name = "circles-the-game"
 }
-
-# resource "digitalocean_project" "ctg" {
-#   name        = "playground"
-#   description = "A project to represent development resources."
-#   purpose     = "Web Application"
-#   environment = "Development"
-# }
 
 resource "digitalocean_project_resources" "init" {
   project = data.digitalocean_project.ctg.id
@@ -76,41 +52,3 @@ resource "digitalocean_kubernetes_node_pool" "elasticity" {
   min_nodes = 1
   max_nodes = 2
 }
-
-# Kubernetes/Flux Bootstrap
-# resource "kubernetes_namespace" "flux_system" {
-#   metadata {
-#     name = "flux-system"
-#   }
-# }
-# resource "kubernetes_secret" "sops_keys" {
-#   depends_on = [
-#     kubernetes_namespace.flux_system
-#   ]
-
-#   type = "Opaque"
-
-#   metadata {
-#     name = "sops-keys"
-#     namespace = "flux-system"
-#   }
-
-#   data = {
-#     # must be named sops.asc
-#     "sops.asc" = "${file("${path.module}/.secret/sops.private.key")}"
-#   }
-# }
-
-# resource "flux_bootstrap_git" "primary" {
-#   depends_on = [
-#     gitlab_deploy_key.primary,
-#     digitalocean_kubernetes_cluster.primary,
-#     kubernetes_secret.sops_keys
-#   ]
-
-#   path = "clusters/beta"
-#   components_extra = [
-#     "image-reflector-controller",
-#     "image-automation-controller"
-#   ]
-# }
