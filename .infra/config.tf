@@ -19,11 +19,11 @@ terraform {
   backend "s3" {
     # https://ctg-tfstate.nyc3.digitaloceanspaces.com
     endpoints = {
-      s3 = "https://ctg-tfstate.nyc3.digitaloceanspaces.com"
+      s3 = "https://nyc3.digitaloceanspaces.com"
     }
 
     key                         = "terraform.tfstate"
-    # bucket                      = "ctg-tfstate"
+    bucket                      = "ctg-tfstate"
 
     # Deactivate a few AWS-specific checks
     skip_credentials_validation = true
