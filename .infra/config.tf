@@ -18,7 +18,10 @@ terraform {
 terraform {
   backend "s3" {
     # https://ctg-tfstate.nyc3.digitaloceanspaces.com
-    endpoint                    = "nyc3.digitaloceanspaces.com"
+    endpoints = {
+      s3 = "nyc3.digitaloceanspaces.com"
+    }
+    
     key                         = "terraform.tfstate"
     bucket                      = "ctg-tfstate"
 
