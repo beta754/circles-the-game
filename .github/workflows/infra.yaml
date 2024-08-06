@@ -11,15 +11,19 @@ jobs:
       - shell: pwsh
         name: Generate tf vars
         env:
-          DO_TOKEN: ${{ secrets.DO_TOKEN }}
           DO_REGION: ${{ vars.DO_REGION }}
+
+          DIGITALOCEAN_TOKEN: ${{ secrets.DO_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.TFBE_ACESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TFBE_ACCESS_KEY_SECRET }}
         run: |
-          write-host "region: $env:DO_REGION"
-          
+          write-host "Generating tfvars:"
           @"
-          do_token = "do_token"
           do_region = "do_region"
           "@ > .infra/env.variables.tfvars
+          cat .infra/env.variables.tfvars
+
+          terraform init
 
 
   # Explore-GitHub-Actions:
