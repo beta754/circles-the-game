@@ -6,7 +6,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - shell: pwsh
-        run: write-host "Hello from terraform init"
+        run: |
+          write-host $pwd
+          ls
       - shell: pwsh
         run: |
           $vars = @"
