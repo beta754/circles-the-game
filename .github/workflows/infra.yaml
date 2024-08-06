@@ -4,6 +4,7 @@ on: [push]
 jobs:
   Terraform:
     runs-on: ubuntu-latest
+    environment: primary
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
