@@ -8,7 +8,8 @@ jobs:
       - shell: pwsh
         run: |
           write-host $pwd
-          ls
+      - shell: pwsh
+        run: ls .
       - shell: pwsh
         run: |
           $vars = @"
