@@ -15,7 +15,9 @@ jobs:
       - shell: pwsh
         name: Generate tf vars
         run: |
-          $vars = @"
+          ls .
+
+          @"
           do_token = "do_token"
           do_region = "do_region"
           "@ > .infra/env.variables.tfvars
