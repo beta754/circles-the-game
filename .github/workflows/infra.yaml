@@ -12,9 +12,7 @@ jobs:
           $vars = @"
           do_token = "do_token"
           do_region = "do_region"
-          "@
-
-          $vars | out-file -filepath .infra/env.variables.tfvars
+          "@ > .infra/env.variables.tfvars
           cat .infra/env.variables.tfvars
 
   # Explore-GitHub-Actions:
