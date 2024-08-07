@@ -4,7 +4,7 @@ on:
   - workflow_dispatch
 jobs:
   Init:
-    uses: ./.github/actions/tf_init.yaml
+    uses: ./.github/workflows/tf_init.yaml
     with:
       REGION: nyc3
       S3_ENDPOINT: https://nyc3.digitaloceanspaces.com
