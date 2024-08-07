@@ -25,7 +25,7 @@ resource "digitalocean_kubernetes_cluster" "primary" {
   region = var.do_region
   # Grab the latest version slug from `doctl kubernetes options versions`
   version  = "1.30.2-do.0"
-  vpc_uuid = digitalocean_vpc.primary_net.id
+  vpc_uuid = data.digitalocean_vpc.primary_net.id
 
   # this is for testing purposes only. should not use this in prod.
   destroy_all_associated_resources = true
