@@ -10,7 +10,7 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.TFBE_ACESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TFBE_ACCESS_KEY_SECRET }}
     steps:
-      - name: Generate tf vars
+      - name: generate tfvars
         shell: pwsh
         working-directory: ".infra"
         env:

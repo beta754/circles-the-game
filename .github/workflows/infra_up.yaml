@@ -1,5 +1,5 @@
 name: Infra Up
-run-name: ${{ github.actor }} is spinning up all the things 🚀
+run-name: ${{ github.actor }} is creating all the things 🚀
 on: [push]
 jobs:
   Terraform:
@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-      - name: Generate tf vars
+      - name: generate tfvars
         shell: pwsh
         working-directory: ".infra"
         env:
