@@ -28,6 +28,7 @@ jobs:
         env:
           TFVARS_FILE: ${{ steps.init.outputs.tfvars_file }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_OWNER: ${{ github.repository_owner }}
         run: terraform plan -out=tfplan -var-file="$env:TFVARS_FILE"
       - name: apply
         if: github.ref == 'refs/heads/master'
@@ -35,6 +36,7 @@ jobs:
         working-directory: .infra
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_OWNER: ${{ github.repository_owner }}
         run: |
           terraform apply tfplan
   ArgoCD:
