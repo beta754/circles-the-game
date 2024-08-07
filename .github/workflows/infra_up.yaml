@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-      - name: generate tfvars
+      - name: mk tfvars
         shell: pwsh
         working-directory: ".infra"
         env:
@@ -24,23 +24,24 @@ jobs:
           @"
           do_region = "$env:DO_REGION"
           "@ > generated.tfvars
-          
           cat generated.tfvars
       - name: mk tf backend
         shell: pwsh
         working-directory: .infra
-        env: {}
+        env:
+          S3_ENDPOINT: https://nyc3.digitaloceanspaces.com
+          S3_BUCKET: ctg-tfstate
+          S3_KEY: "terraform.tfstate"
         run: |
           @"
           terraform {
             backend "s3" {
-              # https://ctg-tfstate.nyc3.digitaloceanspaces.com
               endpoints = {
-                s3 = "https://nyc3.digitaloceanspaces.com"
+                s3 = "$env:S3_ENDPOINT"
               }
 
-              key                         = "terraform.tfstate"
-              bucket                      = "ctg-tfstate"
+              key                         = "$env:S3_KEY"
+              bucket                      = "$env:S3_BUCKET"
 
               # Deactivate a few AWS-specific checks
               skip_credentials_validation = true
@@ -51,7 +52,8 @@ jobs:
               region                      = "us-east-1"
             }
           }
-          " > .backend.tf
+          "@ > backend.tf
+          cat backend.tf
       - name: init
         shell: pwsh
         working-directory: ".infra"

@@ -23,8 +23,36 @@ jobs:
           @"
           do_region = "$env:DO_REGION"
           "@ > generated.tfvars
-          
           cat generated.tfvars
+      - name: mk tf backend
+        shell: pwsh
+        working-directory: .infra
+        env:
+          S3_ENDPOINT: https://nyc3.digitaloceanspaces.com
+          S3_BUCKET: ctg-tfstate
+          S3_KEY: "terraform.tfstate"
+        run: |
+          @"
+          terraform {
+            backend "s3" {
+              endpoints = {
+                s3 = "$env:S3_ENDPOINT"
+              }
+
+              key                         = "$env:S3_KEY"
+              bucket                      = "$env:S3_BUCKET"
+
+              # Deactivate a few AWS-specific checks
+              skip_credentials_validation = true
+              skip_requesting_account_id  = true
+              skip_metadata_api_check     = true
+              skip_region_validation      = true
+              skip_s3_checksum            = true
+              region                      = "us-east-1"
+            }
+          }
+          "@ > backend.tf
+          cat backend.tf
       - name: init
         shell: pwsh
         working-directory: ".infra"
