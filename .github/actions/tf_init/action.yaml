@@ -19,21 +19,25 @@ inputs:
 outputs:
   tfvars_file:
     description: The name of the tfvars file that was generated.
-    value: "generated.tfvars"
+    value: ${{ steps.tfvars.outputs.filename }}
 runs:
   using: composite
   steps:
     - name: mk tfvars
+      id: tfvars
       shell: pwsh
       working-directory: ${{ inputs.cwd }}
       env:
         REGION: ${{ inputs.region }}
       run: |
+        $filename = "generated.tfvars"
+
         write-host "Generating tfvars:"
         @"
         do_region = "$env:REGION"
-        "@ > generated.tfvars
-        cat generated.tfvars
+        "@ > $filename
+        cat $filename
+        write-host "filename=$filename" >> $env:GITHUB_OUTPUT
     - name: mk tf backend
       shell: pwsh
       working-directory: ${{ inputs.cwd }}
