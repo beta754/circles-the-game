@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-      - uses: ./.github/actions/tf_init.yaml
+      - uses: ./.github/actions/tf_init
         id: init
         with:
           region: nyc3
