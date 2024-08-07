@@ -64,5 +64,5 @@ resource "github_actions_environment_secret" "kube_config" {
   environment     = "primary"
 
   secret_name     = "KUBE_CONFIG"
-  plaintext_value = digitalocean_kubernetes_cluster.primary.kube_config[0].raw_config
+  plaintext_value = base64encode(digitalocean_kubernetes_cluster.primary.kube_config[0].raw_config)
 }
