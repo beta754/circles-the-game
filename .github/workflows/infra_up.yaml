@@ -17,16 +17,16 @@ jobs:
       - uses: ./.github/actions/tf_init.yaml
         id: init
         with:
-          REGION: nyc3
-          S3_ENDPOINT: https://nyc3.digitaloceanspaces.com
-          S3_BUCKET: ctg-tfstate
-          S3_STATE_KEY: "terraform.tfstate"
-          WORKING_DIRECTORY: .infra
+          region: nyc3
+          s3_endpoint: https://nyc3.digitaloceanspaces.com
+          s3_bucket: ctg-tfstate
+          s3_state_key: "terraform.tfstate"
+          cwd: .infra
       - name: plan
         shell: pwsh
         working-directory: ".infra"
         env:
-          TFVARS_FILE: ${{ steps.init.TF_VARS }}
+          TFVARS_FILE: ${{ steps.init.tfvars_file }}
         run: terraform plan -out=tfplan -var-file="$env:TFVARS_FILE"
       - name: apply
         if: github.ref == 'refs/heads/master'
