@@ -15,10 +15,9 @@ resource "digitalocean_project_resources" "init" {
   ]
 }
 
-resource "digitalocean_vpc" "primary_net" {
-  name     = "app-net"
+data "digitalocean_vpc" "primary_net" {
+  name     = "immortal"
   region   = var.do_region
-  ip_range = "172.16.0.0/16"
 }
 
 resource "digitalocean_kubernetes_cluster" "primary" {
