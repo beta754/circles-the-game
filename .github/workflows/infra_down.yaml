@@ -1,6 +1,7 @@
 name: Infra Down
 run-name: ${{ github.actor }} is destroying all the things 🚀
-on: [workflow_dispatch]
+on:
+  - workflow_dispatch
 jobs:
   Terraform:
     runs-on: ubuntu-latest

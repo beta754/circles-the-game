@@ -1,6 +1,8 @@
 name: Infra Up
 run-name: ${{ github.actor }} is creating all the things 🚀
-on: [push]
+on:
+  - push
+  - workflow_dispatch
 jobs:
   Terraform:
     runs-on: ubuntu-latest
@@ -24,6 +26,32 @@ jobs:
           "@ > generated.tfvars
           
           cat generated.tfvars
+      - name: mk tf backend
+        shell: pwsh
+        working-directory: .infra
+        env: {}
+        run: |
+          @"
+          terraform {
+            backend "s3" {
+              # https://ctg-tfstate.nyc3.digitaloceanspaces.com
+              endpoints = {
+                s3 = "https://nyc3.digitaloceanspaces.com"
+              }
+
+              key                         = "terraform.tfstate"
+              bucket                      = "ctg-tfstate"
+
+              # Deactivate a few AWS-specific checks
+              skip_credentials_validation = true
+              skip_requesting_account_id  = true
+              skip_metadata_api_check     = true
+              skip_region_validation      = true
+              skip_s3_checksum            = true
+              region                      = "us-east-1"
+            }
+          }
+          " > .backend.tf
       - name: init
         shell: pwsh
         working-directory: ".infra"
