@@ -64,7 +64,7 @@ jobs:
         uses: actions/checkout@v4
       - uses: actions-hub/kubectl@master
         with:
-          args: apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.2/cert-manager.yamlapply
+          args: apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.2/cert-manager.yaml
       - uses: actions-hub/kubectl@master
         with:
           args: apply -f .system/cert-manager/ClusterIssuer.yaml
