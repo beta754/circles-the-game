@@ -16,8 +16,7 @@ resource "digitalocean_project_resources" "init" {
 }
 
 data "digitalocean_vpc" "primary_net" {
-  name     = "immortal"
-  region   = var.do_region
+  name = "immortal"
 }
 
 resource "digitalocean_kubernetes_cluster" "primary" {
