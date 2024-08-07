@@ -21,7 +21,7 @@ jobs:
           do_region = "$env:DO_REGION"
           "@ > generated.tfvars
           
-          cat input.tfvars
+          cat generated.tfvars
       - name: init
         shell: pwsh
         working-directory: ".infra"
