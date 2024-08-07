@@ -26,25 +26,31 @@ runs:
     - name: mk tfvars
       shell: pwsh
       working-directory: ${{ inputs.cwd }}
+      env:
+        REGION: ${{ inputs.region }}
       run: |
         write-host "Generating tfvars:"
         @"
-        do_region = "$env:region"
+        do_region = "$env:REGION"
         "@ > generated.tfvars
         cat generated.tfvars
     - name: mk tf backend
       shell: pwsh
       working-directory: ${{ inputs.cwd }}
+      env:
+        S3_ENDPOINT: ${{ inputs.s3_endpoint }}
+        S3_BUCKET: ${{ inputs.s3_bucket }}
+        S3_STATE_KEY: ${{ inputs.s3_state_key }}
       run: |
         @"
         terraform {
           backend "s3" {
             endpoints = {
-              s3 = "$env:s3_endpoint"
+              s3 = "$env:S3_ENDPOINT"
             }
 
-            bucket = "$env:s3_bucket"
-            key    = "$env:s3_state_key"
+            bucket = "$env:S3_BUCKET"
+            key    = "$env:S3_STATE_KEY"
 
             # Deactivate a few AWS-specific checks
             skip_credentials_validation = true
