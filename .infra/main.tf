@@ -52,3 +52,20 @@ resource "digitalocean_kubernetes_node_pool" "elasticity" {
   min_nodes = 1
   max_nodes = 2
 }
+
+
+# Github
+data "github_repository" "repo" {
+  full_name = "beta754/circles-the-game"
+}
+
+data "github_repository_environment" "primary" {
+  repository       = data.github_repository.repo.name
+  environment      = "primary"
+}
+resource "github_actions_environment_secret" "example_secret" {
+  environment       = data.github_repository_environment.primary.environment
+
+  secret_name       = "KUBE_CONFIG"
+  plaintext_value   = digitalocean_kubernetes_cluster.kubeconfig[0].raw_config
+}
