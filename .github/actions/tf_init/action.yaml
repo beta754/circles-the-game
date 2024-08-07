@@ -37,7 +37,7 @@ runs:
         do_region = "$env:REGION"
         "@ > $filename
         cat $filename
-        write-host "filename=$filename" >> $env:GITHUB_OUTPUT
+        write-output "filename=$filename" >> $env:GITHUB_OUTPUT
     - name: mk tf backend
       shell: pwsh
       working-directory: ${{ inputs.cwd }}
