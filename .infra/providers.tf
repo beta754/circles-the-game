@@ -1,6 +1,8 @@
 provider "digitalocean" { }
 
-provider "github" { }
+provider "github" {
+  app_auth { }
+}
 
 provider "kubernetes" {
   host  = digitalocean_kubernetes_cluster.primary.endpoint
