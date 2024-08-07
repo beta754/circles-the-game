@@ -60,14 +60,14 @@ data "github_repository" "repo" {
 }
 
 resource "github_repository_environment" "primaryk8s" {
-  repository  = data.github_repository.repo.name
+  repository  = data.github_repository.repo.full_name
   environment = "primaryk8s"
 }
 
 resource "github_actions_environment_secret" "kube_config" {
-  repository      = data.github_repository.repo.name
+  repository      = data.github_repository.repo.full_name
   environment     = github_repository_environment.primaryk8s.environment
-  
+
   secret_name     = "KUBE_CONFIG"
   plaintext_value = digitalocean_kubernetes_cluster.primary.kube_config[0].raw_config
 }
