@@ -24,13 +24,13 @@ jobs:
           cwd: .infra
       - name: plan
         shell: pwsh
-        working-directory: ".infra"
+        working-directory: .infra
         env:
           TFVARS_FILE: ${{ steps.init.outputs.tfvars_file }}
         run: terraform plan -out=tfplan -var-file="$env:TFVARS_FILE"
       - name: apply
         if: github.ref == 'refs/heads/master'
         shell: pwsh
-        working-directory: ".infra"
+        working-directory: .infra
         run: |
           terraform apply tfplan

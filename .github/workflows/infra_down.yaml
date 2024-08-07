@@ -13,23 +13,23 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-      - uses: ./.github/actions/tf_init.yaml
-        name: init
+      - uses: ./.github/actions/tf_init
+        id: init
         with:
-          REGION: nyc3
-          S3_ENDPOINT: https://nyc3.digitaloceanspaces.com
-          S3_BUCKET: ctg-tfstate
-          S3_STATE_KEY: "terraform.tfstate"
-          WORKING_DIRECTORY: .infra
+          region: nyc3
+          s3_endpoint: https://nyc3.digitaloceanspaces.com
+          s3_bucket: ctg-tfstate
+          s3_state_key: "terraform.tfstate"
+          cwd: .infra
       - name: plan
         shell: pwsh
-        working-directory: ".infra"
+        working-directory: .infra
         env:
-          TFVARS_FILE: ${{ jobs.init.TF_VARS }}
+          TFVARS_FILE: ${{ steps.init.outputs.tfvars_file }}
         run: terraform plan -destroy -out=tfplan -var-file="$env:TFVARS_FILE"
       - name: apply
         if: github.ref == 'refs/heads/master'
         shell: pwsh
-        working-directory: ".infra"
+        working-directory: .infra
         run: |
           terraform apply -destroy tfplan
