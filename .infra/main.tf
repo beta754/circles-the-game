@@ -60,12 +60,12 @@ data "github_repository" "repo" {
 }
 
 resource "github_repository_environment" "primaryk8s" {
-  repository  = data.github_repository.repo.full_name
+  repository  = data.github_repository.repo.name
   environment = "primaryk8s"
 }
 
 resource "github_actions_environment_secret" "kube_config" {
-  repository      = data.github_repository.repo.full_name
+  repository      = data.github_repository.repo.name
   environment     = github_repository_environment.primaryk8s.environment
 
   secret_name     = "KUBE_CONFIG"
