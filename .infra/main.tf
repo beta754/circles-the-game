@@ -59,13 +59,13 @@ data "github_repository" "repo" {
   full_name = "beta754/circles-the-game"
 }
 
-data "github_repository_environment" "primary" {
-  repository       = data.github_repository.repo.name
-  environment      = "primary"
+resource "github_repository_environment" "primaryk8s" {
+  repository  = data.github_repository.repo.name
+  environment = "primaryk8s"
 }
-resource "github_actions_environment_secret" "example_secret" {
-  environment       = data.github_repository_environment.primary.environment
 
-  secret_name       = "KUBE_CONFIG"
-  plaintext_value   = digitalocean_kubernetes_cluster.kubeconfig[0].raw_config
+resource "github_actions_environment_secret" "kubeconfig" {
+  environment     = github_repository_environment.primaryk8s.environment
+  secret_name     = "KUBE_CONFIG"
+  plaintext_value = digitalocean_kubernetes_cluster.kubeconfig[0].raw_config
 }
