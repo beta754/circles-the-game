@@ -1,7 +1,6 @@
 provider "digitalocean" { }
 
 provider "github" {
-  app_auth { }
 }
 
 provider "kubernetes" {

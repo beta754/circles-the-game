@@ -7,6 +7,8 @@ jobs:
   Terraform:
     runs-on: ubuntu-latest
     environment: primary
+    permissions:
+      administration: write
     env:
       DIGITALOCEAN_TOKEN: ${{ secrets.DO_TOKEN }}
       AWS_ACCESS_KEY_ID: ${{ secrets.TFBE_ACESS_KEY_ID }}
