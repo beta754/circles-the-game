@@ -1,6 +1,6 @@
-name: Infra
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+name: Infra Down
+run-name: ${{ github.actor }} is destroying all the things 🚀
+on: [workflow_dispatch]
 jobs:
   Terraform:
     runs-on: ubuntu-latest
@@ -10,9 +10,7 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.TFBE_ACESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TFBE_ACCESS_KEY_SECRET }}
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-      - name: Generate tf vars\
+      - name: Generate tf vars
         shell: pwsh
         working-directory: ".infra"
         env:
@@ -20,10 +18,10 @@ jobs:
         run: |
           write-host "Generating tfvars:"
           @"
-          do_region = "do_region"
-          "@ > env.variables.tfvars
+          do_region = "$env:DO_REGION"
+          "@ > generated.tfvars
           
-          cat env.variables.tfvars
+          cat input.tfvars
       - name: init
         shell: pwsh
         working-directory: ".infra"
@@ -31,7 +29,13 @@ jobs:
       - name: plan
         shell: pwsh
         working-directory: ".infra"
-        run: terraform plan
+        run: terraform plan -destroy -out=tfplan -var-file='generated.tfvars'
+      - name: apply
+        if: github.ref == 'refs/heads/master'
+        shell: pwsh
+        working-directory: ".infra"
+        run: |
+          terraform apply -destroy tfplan
 
 
   # Explore-GitHub-Actions:
