@@ -26,10 +26,13 @@ jobs:
         working-directory: .infra
         env:
           TFVARS_FILE: ${{ steps.init.outputs.tfvars_file }}
+          GITHUB_TOKEN: ${{ secrets.CICD_TOKEN }}
         run: terraform plan -destroy -out=tfplan -var-file="$env:TFVARS_FILE"
       - name: apply
         if: github.ref == 'refs/heads/master'
         shell: pwsh
         working-directory: .infra
+        env:
+          GITHUB_TOKEN: ${{ secrets.CICD_TOKEN }}
         run: |
           terraform apply -destroy tfplan
