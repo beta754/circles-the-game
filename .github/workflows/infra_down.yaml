@@ -3,83 +3,33 @@ run-name: ${{ github.actor }} is destroying all the things 🚀
 on:
   - workflow_dispatch
 jobs:
-  Terraform:
+  Init:
+    uses: ../actions/tf_init.yaml
+    with:
+      REGION: nyc3
+      S3_ENDPOINT: https://nyc3.digitaloceanspaces.com
+      S3_BUCKET: ctg-tfstate
+      S3_STATE_KEY: "terraform.tfstate"
+      WORKING_DIRECTORY: .infra
+  PlanApply:
     runs-on: ubuntu-latest
     environment: primary
+    needs: Init
     env:
       DIGITALOCEAN_TOKEN: ${{ secrets.DO_TOKEN }}
       AWS_ACCESS_KEY_ID: ${{ secrets.TFBE_ACESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TFBE_ACCESS_KEY_SECRET }}
+      TFVARS_FILE: ${{ needs.Init.TF_VARS }}
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-      - name: generate tfvars
-        shell: pwsh
-        working-directory: ".infra"
-        env:
-          DO_REGION: ${{ vars.DO_REGION }}
-        run: |
-          write-host "Generating tfvars:"
-          @"
-          do_region = "$env:DO_REGION"
-          "@ > generated.tfvars
-          cat generated.tfvars
-      - name: mk tf backend
-        shell: pwsh
-        working-directory: .infra
-        env:
-          S3_ENDPOINT: https://nyc3.digitaloceanspaces.com
-          S3_BUCKET: ctg-tfstate
-          S3_KEY: "terraform.tfstate"
-        run: |
-          @"
-          terraform {
-            backend "s3" {
-              endpoints = {
-                s3 = "$env:S3_ENDPOINT"
-              }
-
-              key                         = "$env:S3_KEY"
-              bucket                      = "$env:S3_BUCKET"
-
-              # Deactivate a few AWS-specific checks
-              skip_credentials_validation = true
-              skip_requesting_account_id  = true
-              skip_metadata_api_check     = true
-              skip_region_validation      = true
-              skip_s3_checksum            = true
-              region                      = "us-east-1"
-            }
-          }
-          "@ > backend.tf
-          cat backend.tf
-      - name: init
-        shell: pwsh
-        working-directory: ".infra"
-        run: terraform init
+      # - name: Check out repository
+      #   uses: actions/checkout@v4
       - name: plan
         shell: pwsh
         working-directory: ".infra"
-        run: terraform plan -destroy -out=tfplan -var-file='generated.tfvars'
+        run: terraform plan -destroy -out=tfplan -var-file="$env:TFVARS_FILE"
       - name: apply
         if: github.ref == 'refs/heads/master'
         shell: pwsh
         working-directory: ".infra"
         run: |
           terraform apply -destroy tfplan
-
-
-  # Explore-GitHub-Actions:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-  #     - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-  #     - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-  #     - name: Check out repository code
-  #       uses: actions/checkout@v4
-  #     - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-  #     - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-  #     - name: List files in the repository
-  #       run: |
-  #         ls ${{ github.workspace }}
-  #     - run: echo "🍏 This job's status is ${{ job.status }}."
