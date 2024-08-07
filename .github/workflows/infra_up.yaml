@@ -1,4 +1,4 @@
-name: Infra Down
+name: Infra Up
 run-name: ${{ github.actor }} is creating all the things 🚀
 on:
   - push
