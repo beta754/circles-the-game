@@ -45,9 +45,11 @@ jobs:
     env:
       KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
       - uses: actions-hub/kubectl@master
         with:
-          args: create namespace argocd
+          args: apply -f .argo/namespace.yaml
       - uses: actions-hub/kubectl@master
         with:
           args: apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
