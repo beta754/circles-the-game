@@ -1,5 +1,7 @@
 provider "digitalocean" { }
 
+provider "github" { }
+
 provider "kubernetes" {
   host  = digitalocean_kubernetes_cluster.primary.endpoint
   token = digitalocean_kubernetes_cluster.primary.kube_config[0].token
