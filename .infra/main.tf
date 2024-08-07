@@ -67,5 +67,5 @@ resource "github_repository_environment" "primaryk8s" {
 resource "github_actions_environment_secret" "kubeconfig" {
   environment     = github_repository_environment.primaryk8s.environment
   secret_name     = "KUBE_CONFIG"
-  plaintext_value = digitalocean_kubernetes_cluster.kubeconfig[0].raw_config
+  plaintext_value = digitalocean_kubernetes_cluster.primary.kubeconfig[0].raw_config
 }
