@@ -3,29 +3,29 @@ run-name: ${{ github.actor }} is destroying all the things 🚀
 on:
   - workflow_dispatch
 jobs:
-  Init:
-    uses: ./.github/actions/tf_init.yaml
-    with:
-      REGION: nyc3
-      S3_ENDPOINT: https://nyc3.digitaloceanspaces.com
-      S3_BUCKET: ctg-tfstate
-      S3_STATE_KEY: "terraform.tfstate"
-      WORKING_DIRECTORY: .infra
-  PlanApply:
+  Terraform:
     runs-on: ubuntu-latest
     environment: primary
-    needs: Init
     env:
       DIGITALOCEAN_TOKEN: ${{ secrets.DO_TOKEN }}
       AWS_ACCESS_KEY_ID: ${{ secrets.TFBE_ACESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.TFBE_ACCESS_KEY_SECRET }}
-      TFVARS_FILE: ${{ needs.Init.TF_VARS }}
     steps:
-      # - name: Check out repository
-      #   uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - uses: ./.github/actions/tf_init.yaml
+        name: init
+        with:
+          REGION: nyc3
+          S3_ENDPOINT: https://nyc3.digitaloceanspaces.com
+          S3_BUCKET: ctg-tfstate
+          S3_STATE_KEY: "terraform.tfstate"
+          WORKING_DIRECTORY: .infra
       - name: plan
         shell: pwsh
         working-directory: ".infra"
+        env:
+          TFVARS_FILE: ${{ jobs.init.TF_VARS }}
         run: terraform plan -destroy -out=tfplan -var-file="$env:TFVARS_FILE"
       - name: apply
         if: github.ref == 'refs/heads/master'
