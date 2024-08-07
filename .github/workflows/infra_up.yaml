@@ -1,5 +1,5 @@
 name: Infra Down
-run-name: ${{ github.actor }} is destroying all the things 🚀
+run-name: ${{ github.actor }} is creating all the things 🚀
 on:
   - push
   - workflow_dispatch
@@ -15,7 +15,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
       - uses: ./.github/actions/tf_init.yaml
-        name: init
+        id: init
         with:
           REGION: nyc3
           S3_ENDPOINT: https://nyc3.digitaloceanspaces.com
@@ -26,7 +26,7 @@ jobs:
         shell: pwsh
         working-directory: ".infra"
         env:
-          TFVARS_FILE: ${{ jobs.init.TF_VARS }}
+          TFVARS_FILE: ${{ steps.init.TF_VARS }}
         run: terraform plan -out=tfplan -var-file="$env:TFVARS_FILE"
       - name: apply
         if: github.ref == 'refs/heads/master'
